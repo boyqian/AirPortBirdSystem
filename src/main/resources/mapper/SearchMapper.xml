@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boyqian.dao.SearchDao" >
+
+<resultMap type="com.boyqian.param.NameNumReq" id="nameNumMap">
+<result column="birdName" property="name"/>
+<result column="num" property="value"/>
+</resultMap>
+
+<resultMap type="com.boyqian.param.NameTimeNumReq" id="nameTimeMap">
+<result column="sa" property="area"/>
+<result column="st" property="month"/>
+<result column="sn" property="num"/>
+</resultMap>
+
+<resultMap type="com.boyqian.param.AreaReq" id="areaMap">
+<result column="area" property="area"/>
+</resultMap>
+
+<resultMap type="com.boyqian.param.NameReq" id="nameMap">
+<result column="bird_name" property="name"/>
+</resultMap>
+
+<resultMap type="com.boyqian.param.BubbleGraphReq" id="bubbleMap">
+<result column="sd" property="day"/>
+<result column="sh" property="height"/>
+<result column="sn" property="num"/>
+<result column="st" property="time"/>
+<result column="sb" property="name"/>
+</resultMap>
+
+<select id="findBirdNameAndNum" resultMap="nameNumMap">
+select b.bird_name as birdName,sum(re.num) as num 
+from bird b join record re on 
+b.bird_id=re.bird_id 
+group by birdName
+</select>
+<select id="findBirdNTN" parameterType="com.boyqian.param.AreaReq"  resultMap="nameTimeMap">
+select re.area as sa,month(re.time) as st,sum(re.num) as sn from record re left join bird b
+on re.bird_id=b.bird_id
+group by st,sa
+<if test="area!=null and area!=''">
+having sa=#{area}
+</if>
+order by sa,st
+</select>
+<select id="findAllArea" resultMap="areaMap">
+select area from record
+group by area
+</select>
+<select id="findBubble" parameterType="com.boyqian.param.NameReq" resultMap="bubbleMap">
+select  day(re.time) as sd,re.height as sh,sum(re.num) as sn,re.area as sa,re.time as st,b.bird_name as sb from record re join bird b
+on re.bird_id=b.bird_id
+and DATE_FORMAT(re.time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+group by sd,sb,sh,sa,st
+<if test="name!=null and name!=''">
+having sb=#{name}
+</if>
+</select>
+<select id="findAllName" resultMap="nameMap">
+select b.bird_name from bird b join record re
+on b.bird_id=re.bird_id
+and DATE_FORMAT(re.time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+group by b.bird_name
+</select>
+<select id="findBubbleCount" parameterType="com.boyqian.param.NameReq" resultType="Integer">
+select count(1) from(
+select  day(re.time) as sd,re.height as sh,sum(re.num) as sn,re.area as sa,re.time as st,b.bird_name as sb from record re join bird b
+on re.bird_id=b.bird_id
+and DATE_FORMAT(re.time,'%Y%m')=DATE_FORMAT(CURDATE(),'%Y%m')
+group by sd,sb,sh,sa,st
+<if test="name!=null and name!=''">
+having sb=#{name}
+</if>
+)as a
+</select>
+</mapper>

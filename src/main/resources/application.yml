@@ -1,0 +1,13 @@
+server:
+  port: ${serverPort:8081}
+mybatis:
+  mapper-locations:
+  - classpath:mapper/*.xml
+  type-aliases-package: com.boyqian.dao
+  type-handlers-package: com.boyqian.dao
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${dataBaseAddr:192.168.2.135}:${dataBasePort:3306}/${dataBaseName:bird}?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: ${dataBaseUserName:root}
+    password: ${dataBaseUserPwd:123456}

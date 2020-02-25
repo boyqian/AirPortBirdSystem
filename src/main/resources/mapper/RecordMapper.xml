@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boyqian.dao.RecordDao" >
+<resultMap type="com.boyqian.pojo.Record" id="recordMap">
+<id column="id" property="id"/>
+<result column="bird_id" property="birdId"/>
+<result column="bird_name" property="birdName"/>
+<result column="area" property="area"/>
+<result column="time" property="time"/>
+<result column="num" property="num"/>
+<result column="height" property="height"/>
+</resultMap>
+	<insert id="insertRecord" parameterType="com.boyqian.pojo.Record">
+	insert into record (bird_id,area,time,num,height) values(
+	#{birdId},#{area},#{time},#{num},#{height}
+	)
+	</insert>
+	<update id="updateRecord" parameterType="com.boyqian.pojo.Record">
+	update record set bird_id=#{birdId},area=#{area},time=#{time},num=#{time},height=#{height}
+	</update>
+	<delete id="deleteRecord" parameterType="Integer">
+	delete from record where record_id=#{recordId}
+	</delete>
+	<select id="selectRecord" resultMap="recordMap">
+	select re.*,b.bird_name from record re join bird b
+    on re.bird_id=b.bird_id
+	limit #{page},#{limit}
+	</select>
+	<select id="selectRecordCount" resultType="Integer">
+	select count(1) from record
+	</select>
+	<select id="selectRecordById" parameterType="Integer">
+	select * from record
+	where record_id=#{recordId}
+	</select>
+<!-- 	
+	<select id="">
+	select bird_name,num from bird b join record r on
+	b.bird_id=r.bird_id
+	group by bird_name
+	</select> -->
+	
+</mapper>

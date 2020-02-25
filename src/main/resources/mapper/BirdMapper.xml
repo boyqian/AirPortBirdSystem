@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boyqian.dao.BirdDao" >
+<resultMap type="com.boyqian.pojo.Bird" id="birdMap">
+<id column="bird_id" property="birdId"/>
+<result column="type_id" property="typeId"/>
+<result column="type_name" property="typeName"/>
+<result column="bird_name" property="birdName"/>
+</resultMap>
+
+<insert id="insertBird" parameterType="com.boyqian.pojo.Bird">
+insert into bird (type_id,bird_name) values(
+#{typeId},#{birdName}
+)
+</insert>
+<update id="updateBird" parameterType="com.boyqian.pojo.Bird">
+update bird set type_id=#{typeId},bird_name=#{birdName}
+where bird_id=#{birdId}
+</update>
+<update id="deleteBirdType" parameterType="Integer">
+update bird set type_id=null where type_id=#{typeId}
+</update>	
+<delete id="deleteBird" parameterType="Integer">
+delete from bird where bird_id=#{birdId}
+</delete>
+<select id="selectBird" resultMap="birdMap">
+select t.type_name,b.* from bird b left join type t
+on b.type_id=t.type_id
+limit #{page},#{limit}
+</select>
+<select id="selectBirdCount" resultType="Integer">
+select count(1) from bird
+</select>
+<select id="selectBirdById" parameterType="Integer" resultMap="birdMap">
+select * from bird where bird_id=#{birdId}
+</select>
+<select id="findAllBird" resultMap="birdMap">
+select * from bird
+</select>
+</mapper>

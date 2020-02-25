@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boyqian.dao.TypeDao" >
+<resultMap type="com.boyqian.pojo.Type" id="typeMap">
+<id column="type_id" property="typeId"/>
+<result column="type_name" property="typeName"/>
+</resultMap>
+<insert id="insertType" parameterType="com.boyqian.pojo.Type">
+insert into type (type_name) value (#{typeName})
+</insert>
+<update id="updateType" parameterType="com.boyqian.pojo.Type">
+update type set type_name=#{typeName}
+where type_id=#{typeId}
+</update>
+<delete id="deleteType" parameterType="Integer">
+delete from type where type_id=#{typeId}
+</delete>
+<select id="selectType" resultMap="typeMap">
+select * from type
+where 1=1
+limit #{page},#{limit}
+</select>
+<select id="selectTypeById" parameterType="Integer" resultMap="typeMap">
+select * from type where type_id=#{typeId}
+</select>
+<select id="selectTypeCount" resultType="Integer">
+select count(1) from type
+</select>
+<select id="findAllType" resultMap="typeMap">
+select * from type
+</select>
+</mapper>
